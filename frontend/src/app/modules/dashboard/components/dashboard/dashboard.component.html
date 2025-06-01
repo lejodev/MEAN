@@ -1,0 +1,29 @@
+<div class="dashboard-container mat-typography">
+    <mat-toolbar color="primary" class="mat-elevation-z4">
+        <span>📝 Task Dashboard</span>
+        <span class="spacer"></span>
+        <button mat-raised-button color="accent" (click)="openCreateTaskModal()">
+            <mat-icon>add</mat-icon> Create Task
+        </button>
+    </mat-toolbar>
+
+    <div class="content">
+        <mat-card *ngIf="tasks.length === 0" class="empty-card">
+            <mat-card-content>
+                <p>No tasks available. Create your first task!</p>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-list *ngIf="tasks.length > 0" class="task-list">
+            <mat-list-item *ngFor="let task of tasks" class="task-item">
+                <mat-icon matListIcon color="primary">assignment</mat-icon>
+                <div matLine class="task-title">{{ task.title }}</div>
+                <div matLine class="secondary">{{ task.description }}</div>
+                <div matLine class="date">📅 Due: {{ task.dueDate | date:'mediumDate' }}</div>
+                <button mat-icon-button color="warn" (click)="onClickDelete(task._id!)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </mat-list-item>
+        </mat-list>
+    </div>
+</div>

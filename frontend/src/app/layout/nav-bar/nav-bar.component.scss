@@ -1,0 +1,17 @@
+.app-title {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+  margin-left: 10px;
+  &.active-link {
+    border-bottom: 2px solid white;
+  }
+}

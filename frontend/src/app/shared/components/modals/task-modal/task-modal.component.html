@@ -1,0 +1,58 @@
+<div>
+    <h2 mat-dialog-title>Add New Task</h2>
+    <mat-dialog-content>
+        <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="task-form">
+            <mat-form-field appearance="outline">
+                <mat-label>Title</mat-label>
+                <input matInput formControlName="title" required>
+                <mat-error *ngIf="taskForm.get('title')?.hasError('required')">Title is required</mat-error>
+                <mat-error *ngIf="taskForm.get('title')?.hasError('minlength')">Title must be at least 3
+                    characters</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Description</mat-label>
+                <textarea matInput formControlName="description"></textarea>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Due Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="dueDate" required>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="taskForm.get('dueDate')?.hasError('required')">Due date is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Priority</mat-label>
+                <mat-select formControlName="priority" required>
+                    <mat-option value="low">Low</mat-option>
+                    <mat-option value="medium">Medium</mat-option>
+                    <mat-option value="high">High</mat-option>
+                </mat-select>
+                <mat-error *ngIf="taskForm.get('priority')?.hasError('required')">Priority is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Tags (comma separated)</mat-label>
+                <input matInput formControlName="tags">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status" required>
+                    <mat-option value="pending">Pending</mat-option>
+                    <mat-option value="in progress">In Progress</mat-option>
+                    <mat-option value="completed">Completed</mat-option>
+                </mat-select>
+                <mat-error *ngIf="taskForm.get('status')?.hasError('required')">Status is required</mat-error>
+            </mat-form-field>
+
+
+            <div class="form-actions">
+                <button mat-raised-button color="primary" type="submit">Add Task</button>
+                <button mat-stroked-button mat-dialog-close type="button">Cancel</button>
+            </div>
+        </form>
+    </mat-dialog-content>
+</div>

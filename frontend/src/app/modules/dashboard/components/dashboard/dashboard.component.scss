@@ -1,0 +1,106 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+
+  .content {
+    margin-top: 20px;
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  .task-list {
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px;
+  }
+
+  .task-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+
+    .task-title {
+      font-weight: 600;
+    }
+
+    .secondary {
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    .date {
+      font-size: 0.8em;
+      color: #888;
+    }
+  }
+
+  .empty-card {
+    text-align: center;
+    padding: 40px;
+    background: #f5f5f5;
+  }
+
+  .task-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+  }
+}
+
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  max-width: 500px;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background: white;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+::ng-deep .cdk-overlay-container {
+  z-index: 1000;
+}
+
+.task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+/* Optional: Add this to dim the background */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+}
