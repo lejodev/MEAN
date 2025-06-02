@@ -10,11 +10,32 @@ const getTasksById = async (id) => {
 
 const createTask = async (body) => {
     const newTask = new TaskModel(body)
+    newTask.history.push({
+        field: 'created',
+        oldValue: null,
+        newValue: body,
+        changedAt: new Date()
+    })
     return await newTask.save()
 }
 
 const updateTask = async (id, partial) => {
     const updatedTask = TaskModel.findByIdAndUpdate(id, partial, { new: true })
+    const history = [];
+    for (const key in partial) {
+        if (partial.hasOwnProperty(key)) {
+            const oldValue = updatedTask[key];
+            const newValue = partial[key];
+            if (oldValue !== newValue) {
+                history.push({
+                    field: key,
+                    oldValue: oldValue,
+                    newValue: newValue,
+                    changedAt: new Date()
+                });
+            }
+        }
+    }
     return await updatedTask
 }
 

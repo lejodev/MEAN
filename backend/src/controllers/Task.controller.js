@@ -30,6 +30,8 @@ async function getTaskById(req, res, next) {
 
 async function create(req, res) {
     const body = req.body
+    console.log(req.body);
+    
     const newTask = await taskService.createTask(body)
     res.status(201).json(newTask)
 }
