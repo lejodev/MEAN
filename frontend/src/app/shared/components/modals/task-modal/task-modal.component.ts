@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ITask } from 'src/app/modules/dashboard/interfaces/task.interface';
 import { DashboardService } from 'src/app/modules/dashboard/services/dashboard/dashboard.service';
@@ -13,6 +13,9 @@ export class TaskModalComponent implements OnInit {
   taskForm!: FormGroup;
   isEditMode: boolean = false;
   dialogTitle: string = 'Create Task';
+
+  // This is the current date. To ensure duedate is no in the past
+  minDate: Date = new Date();
 
   constructor(
     private dialogRef: MatDialogRef<TaskModalComponent>,
@@ -31,13 +34,28 @@ export class TaskModalComponent implements OnInit {
     }
   }
 
+  private dateValidator(control: AbstractControl): ValidationErrors | null {
+    const date = new Date(control.value);
+    const today = new Date();
+
+    today.setHours(0, 0, 0, 0);
+    date.setHours(0, 0, 0, 0);
+    
+    if (date < today) {
+      console.log(date, today);
+      
+      return { pastDate: 'Due date cannot be in the past' };
+    }
+    return null;
+  }
+
   private initForm(): void {
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: [''],
       status: ['pending', Validators.required],
       priority: ['medium', Validators.required],
-      dueDate: [new Date(), Validators.required],
+      dueDate: [new Date(),[ Validators.required, this.dateValidator]],
       tags: ['']
     });
   }
