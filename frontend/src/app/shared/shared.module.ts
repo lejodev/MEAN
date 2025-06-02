@@ -18,6 +18,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { ConfirmationDialogComponent } from './components/dialogs/confirmation-dialog/confirmation-dialog.component';
 
 
 
@@ -25,7 +26,8 @@ import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
-    TaskModalComponent
+    TaskModalComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     CommonModule,

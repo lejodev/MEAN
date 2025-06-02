@@ -7,6 +7,7 @@ import { TaskModalComponent } from 'src/app/shared/components/modals/task-modal/
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/dialogs/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,17 +36,17 @@ export class DashboardComponent implements OnInit {
 
   }
 
-ngOnInit(): void {
-  this.dashboardService.getAllTasks().subscribe({
-    error: (err) => console.error('Error fetching tasks:', err)
-  });
+  ngOnInit(): void {
+    this.dashboardService.getAllTasks().subscribe({
+      error: (err) => console.error('Error fetching tasks:', err)
+    });
 
-  this.dashboardService.tasks$.subscribe(tasks => {
-    console.log(tasks);
-    
-    this.dataSource.data = tasks;
-  });
-}
+    this.dashboardService.tasks$.subscribe(tasks => {
+      console.log(tasks);
+
+      this.dataSource.data = tasks;
+    });
+  }
 
 
 
@@ -57,25 +58,37 @@ ngOnInit(): void {
   }
 
   onClickDelete(taskId: string): void {
-    this.dashboardService.delete(taskId).subscribe({
-      error: (err) => {
-        console.error("Error deleting task:", err);
-      }, next: (task) => {
-        console.log("Task deleted successfully:", task);
-        this.tasks = this.tasks.filter(t => t._id !== taskId);
-      }
-    });
-  }
+  const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+    width: '300px',
+    data: {
+      title: 'Confirm Delete',
+      message: 'Are you sure you want to delete this task?'
+    }
+  });
 
-    applyFilter(event: Event): void {
+  dialogRef.afterClosed().subscribe(confirmed => {
+    if (confirmed) {
+      this.dashboardService.delete(taskId).subscribe({
+        error: (err) => {
+          console.error("Error deleting task:", err);
+        },
+        next: () => {
+          this.dataSource.data = this.dataSource.data.filter(t => t._id !== taskId);
+        }
+      });
+    }
+  });
+}
+
+  applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
     this.dataSource.filter = filterValue;
   }
 
   ngAfterViewInit(): void {
-  this.dataSource.paginator = this.paginator;
-  this.dataSource.sort = this.sort;
-}
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
 
 
 }

@@ -8,11 +8,6 @@
     </mat-toolbar>
 
     <div class="content">
-        <mat-card *ngIf="tasks.length === 0" class="empty-card">
-            <mat-card-content>
-                <p>No tasks available. Create your first task!</p>
-            </mat-card-content>
-        </mat-card>
 
         <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 

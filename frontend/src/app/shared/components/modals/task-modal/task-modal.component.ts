@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ITask } from 'src/app/modules/dashboard/interfaces/task.interface';
 import { DashboardService } from 'src/app/modules/dashboard/services/dashboard/dashboard.service';
+import { ConfirmationDialogComponent } from '../../dialogs/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-task-modal',
@@ -58,5 +59,28 @@ export class TaskModalComponent implements OnInit {
     });
   }
 
+  onClickDelete(taskId: string): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '300px',
+      data: {
+        title: 'Delete Task',
+        message: 'Are you sure you want to delete this task?'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.dashboardService.delete(taskId).subscribe({
+          error: (err) => {
+            console.error("Error deleting task:", err);
+          },
+          next: (task) => {
+            console.log("Task deleted successfully:", task);
+            this.tasks = this.tasks.filter(t => t._id !== taskId);
+          }
+        });
+      }
+    });
+  }
 
 }
