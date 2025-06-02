@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/dialogs/confirmation-dialog/confirmation-dialog.component';
+import { HistoryDialogComponent } from 'src/app/shared/components/dialogs/history-dialog/history-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -90,5 +91,10 @@ export class DashboardComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-
+  showTaskHistory(task: ITask): void {
+    this.dialog.open(HistoryDialogComponent, {
+      width: '600px',
+      data: { task }
+    });
+  }
 }
