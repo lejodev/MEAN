@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ITask } from 'src/app/modules/dashboard/interfaces/task.interface';
 import { DashboardService } from 'src/app/modules/dashboard/services/dashboard/dashboard.service';
-import { ConfirmationDialogComponent } from '../../dialogs/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-task-modal',
@@ -11,76 +10,89 @@ import { ConfirmationDialogComponent } from '../../dialogs/confirmation-dialog/c
   styleUrls: ['./task-modal.component.scss']
 })
 export class TaskModalComponent implements OnInit {
-
   taskForm!: FormGroup;
-  tasks: ITask[] = [];
+  isEditMode: boolean = false;
+  dialogTitle: string = 'Create Task';
 
   constructor(
-    public _matDialogRef: MatDialogRef<TaskModalComponent>,
+    private dialogRef: MatDialogRef<TaskModalComponent>,
     private dashboardService: DashboardService,
     private fb: FormBuilder,
-    private dialog: MatDialog
-  ) { }
+    @Inject(MAT_DIALOG_DATA) public data?: { task: ITask, isEdit: boolean }
+  ) {
+    this.isEditMode = data?.isEdit || false;
+    this.dialogTitle = this.isEditMode ? 'Edit Task' : 'Create Task';
+  }
 
   ngOnInit(): void {
+    this.initForm();
+    if (this.isEditMode && this.data?.task) {
+      this.patchFormValues(this.data.task);
+    }
+  }
+
+  private initForm(): void {
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: [''],
-      dueDate: ['', Validators.required],
-      priority: ['Medium', Validators.required],
-      tags: [''],
-      status: ['pending', Validators.required]
-    })
+      status: ['pending', Validators.required],
+      priority: ['medium', Validators.required],
+      dueDate: [new Date(), Validators.required],
+      tags: ['']
+    });
+  }
+
+  private patchFormValues(task: ITask): void {
+    this.taskForm.patchValue({
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      priority: task.priority,
+      dueDate: new Date(task.dueDate),
+      tags: task.tags?.join(', ') || ''
+    });
   }
 
   onSubmit(): void {
-
     if (this.taskForm.invalid) {
-      console.error("Form is invalid");
       return;
     }
 
-    const taskData = this.taskForm.value;
+    const formValue = this.taskForm.value;
+    const taskData: Partial<ITask> = {
+      ...formValue,
+      dueDate: new Date(formValue.dueDate).toISOString(),
+      tags: formValue.tags ? formValue.tags.split(',').map((tag: string) => tag.trim()) : []
+    };
 
-    if (taskData.dueDate) {
-      taskData.dueDate = new Date(taskData.dueDate).toISOString();
+    if (this.isEditMode && this.data?.task._id) {
+      this.updateTask(this.data.task._id, taskData);
+    } else {
+      this.createTask(taskData);
     }
+  }
 
-    console.log(taskData);
-
+  private createTask(taskData: Partial<ITask>): void {
     this.dashboardService.create(taskData).subscribe({
+      next: (task) => {
+        console.log('Task created successfully:', task);
+        this.dialogRef.close(task);
+      },
       error: (err) => {
-        console.log("Error creating task:", err);
-      }, next: (task) => {
-        console.log("Task created successfully:", task);
-        this.taskForm.reset();
-        this._matDialogRef.close()
+        console.error('Error creating task:', err);
       }
     });
   }
 
-  onClickDelete(taskId: string): void {
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '300px',
-      data: {
-        title: 'Delete Task',
-        message: 'Are you sure you want to delete this task?'
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.dashboardService.delete(taskId).subscribe({
-          error: (err) => {
-            console.error("Error deleting task:", err);
-          },
-          next: (task) => {
-            console.log("Task deleted successfully:", task);
-            this.tasks = this.tasks.filter(t => t._id !== taskId);
-          }
-        });
+  private updateTask(taskId: string, taskData: Partial<ITask>): void {
+    this.dashboardService.update(taskId, taskData).subscribe({
+      next: (task) => {
+        console.log('Task updated successfully:', task);
+        this.dialogRef.close(task);
+      },
+      error: (err) => {
+        console.error('Error updating task:', err);
       }
     });
   }
-
 }

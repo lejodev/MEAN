@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/dialogs/confirmation-dialog/confirmation-dialog.component';
+import { HistoryDialogComponent } from 'src/app/shared/components/dialogs/history-dialog/history-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,7 +22,7 @@ export class DashboardComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild('newTaskModal') newTaskModalTemplate!: TemplateRef<any>;
+  @ViewChild('newTaskModal') HistoryDialogComponent!: TemplateRef<any>;
 
 
   tasks: ITask[] = [];
@@ -90,5 +91,33 @@ export class DashboardComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
+  showTaskHistory(task: ITask): void {
+    this.dialog.open(HistoryDialogComponent, {
+      width: '600px',
+      data: { task }
+    });
+  }
+   onEditTask(task: ITask): void {
+    console.log(task);
+    
+    const dialogRef = this.dialog.open(TaskModalComponent, {
+      width: '500px',
+      data: { task, isEdit: true }
+    });
 
+    // dialogRef.afterClosed().subscribe(result => {
+    //   if (result) {
+    //     this.dashboardService.update(task._id!, result).subscribe({
+    //       next: (updatedTask) => {
+    //         const index = this.dataSource.data.findIndex(t => t._id === task._id);
+    //         if (index !== -1) {
+    //           this.dataSource.data[index] = updatedTask;
+    //           this.dataSource._updateChangeSubscription();
+    //         }
+    //       },
+    //       error: (err) => console.error('Error updating task:', err)
+    //     });
+    //   }
+    // });
+  }
 }
