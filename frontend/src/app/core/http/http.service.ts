@@ -19,7 +19,7 @@ export class HttpService {
   public env = environment
 
   api(url: string): string {
-    let base = this.env.apibaseurl
+    let base = "https://mean-pof3.onrender.com/api/tasks"
     const endpoint = `${base}/${url}`
     console.log(endpoint);
     
