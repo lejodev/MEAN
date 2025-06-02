@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { ITask } from '../../interfaces/task.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -15,7 +15,7 @@ import { HistoryDialogComponent } from 'src/app/shared/components/dialogs/histor
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['title', 'status', 'priority', 'dueDate', 'tags', 'actions'];
   dataSource = new MatTableDataSource<ITask>();
@@ -47,9 +47,11 @@ export class DashboardComponent implements OnInit {
 
       this.dataSource.data = tasks;
     });
+
+    this.dataSource.filterPredicate = (data: ITask, filter: string) => {
+      return data.title.toLowerCase().includes(filter);
+    };
   }
-
-
 
   openCreateTaskModal(): void {
 
@@ -82,10 +84,14 @@ export class DashboardComponent implements OnInit {
 }
 
   applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    this.dataSource.filter = filterValue;
-  }
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
 
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+  
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -104,20 +110,5 @@ export class DashboardComponent implements OnInit {
       width: '500px',
       data: { task, isEdit: true }
     });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.dashboardService.update(task._id!, result).subscribe({
-    //       next: (updatedTask) => {
-    //         const index = this.dataSource.data.findIndex(t => t._id === task._id);
-    //         if (index !== -1) {
-    //           this.dataSource.data[index] = updatedTask;
-    //           this.dataSource._updateChangeSubscription();
-    //         }
-    //       },
-    //       error: (err) => console.error('Error updating task:', err)
-    //     });
-    //   }
-    // });
   }
 }

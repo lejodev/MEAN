@@ -104,3 +104,29 @@
   background: rgba(0, 0, 0, 0.6);
   z-index: 999;
 }
+
+.search-field {
+  margin: 0 16px;
+  width: 300px;
+  font-size: 14px;
+  
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+  
+  ::ng-deep .mat-form-field-flex {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  ::ng-deep .mat-form-field-outline {
+    color: rgba(255, 255, 255, 0.3);
+  }
+  
+  ::ng-deep .mat-input-element {
+    color: white;
+  }
+  
+  ::ng-deep .mat-form-field-label {
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
