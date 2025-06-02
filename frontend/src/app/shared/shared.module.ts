@@ -15,6 +15,12 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { TaskModalComponent } from './components/modals/task-modal/task-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+
+
+
 
 
 @NgModule({
@@ -34,7 +40,10 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatInputModule,
     MatNativeDateModule,
     MatSelectModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatTableModule
   ], exports: [
     MatToolbarModule,
     MatButtonModule,
@@ -46,7 +55,10 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatDatepickerModule,
     MatInputModule,
     MatSelectModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatTableModule
   ]
 })
 export class SharedModule { }

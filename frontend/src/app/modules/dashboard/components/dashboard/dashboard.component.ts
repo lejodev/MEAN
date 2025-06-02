@@ -1,9 +1,12 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { ITask } from '../../interfaces/task.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { TaskModalComponent } from 'src/app/shared/components/modals/task-modal/task-modal.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,7 +15,13 @@ import { TaskModalComponent } from 'src/app/shared/components/modals/task-modal/
 })
 export class DashboardComponent implements OnInit {
 
+  displayedColumns: string[] = ['title', 'status', 'priority', 'dueDate', 'tags', 'actions'];
+  dataSource = new MatTableDataSource<ITask>();
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('newTaskModal') newTaskModalTemplate!: TemplateRef<any>;
+
 
   tasks: ITask[] = [];
 
@@ -26,22 +35,19 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  ngOnInit(): void {
-    this.dashboardService.tasks$.subscribe(tasks => {
-      this.tasks = tasks
-    });
+ngOnInit(): void {
+  this.dashboardService.getAllTasks().subscribe({
+    error: (err) => console.error('Error fetching tasks:', err)
+  });
 
-    this.dashboardService.getAllTasks().subscribe({
-      error: (err) => {
-        console.error("Error fetching tasks:", err);
-      }
-      // , next: (tasks) => {
-      //   console.log("Tasks fetched successffgully:", tasks);
-      //   this.tasks = tasks;
-      // }
-    })
-    this.dashboardService.getAllTasks();
-  }
+  this.dashboardService.tasks$.subscribe(tasks => {
+    console.log(tasks);
+    
+    this.dataSource.data = tasks;
+  });
+}
+
+
 
   openCreateTaskModal(): void {
 
@@ -60,6 +66,16 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+
+    applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.dataSource.filter = filterValue;
+  }
+
+  ngAfterViewInit(): void {
+  this.dataSource.paginator = this.paginator;
+  this.dataSource.sort = this.sort;
+}
 
 
 }

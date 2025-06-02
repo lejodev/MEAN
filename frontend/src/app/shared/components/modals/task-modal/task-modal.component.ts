@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ITask } from 'src/app/modules/dashboard/interfaces/task.interface';
-import { DashboardService } from 'src/app/modules/dashboard/services/dashboard.service';
+import { DashboardService } from 'src/app/modules/dashboard/services/dashboard/dashboard.service';
 
 @Component({
   selector: 'app-task-modal',

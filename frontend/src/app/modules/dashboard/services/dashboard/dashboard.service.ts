@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from 'src/app/core/http/http.service';
-import { ITask } from '../interfaces/task.interface';
+import { ITask } from '../../interfaces/task.interface';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 @Injectable({
@@ -29,7 +29,13 @@ getAllTasks(): Observable<ITask[]> {
   }
 
   delete(taskId: string) {
-    return this.httpService.delete(`${taskId}`) as Observable<ITask>;
-  }
+  return this.httpService.delete(`${taskId}`).pipe(
+    tap(() => {
+      const current = this.tasksSubject.getValue();
+      this.tasksSubject.next(current.filter(task => task._id !== taskId));
+    })
+  );
+}
+
 
 }
