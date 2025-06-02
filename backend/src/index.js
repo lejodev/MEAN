@@ -27,6 +27,8 @@ app.use(errorHandler)
 const connectDb = require('./config/db')
 connectDb()
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT, () => {
+  console.log(`Example app listening at http://localhost:${PORT}`)
 })
