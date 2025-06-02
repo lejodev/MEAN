@@ -19,7 +19,7 @@ export class HttpService {
   public env = environment
 
   api(url: string): string {
-    let base = this.env.apiBaseUrl
+    let base = this.env.apibaseurl
     const endpoint = `${base}/${url}`
     console.log(endpoint);
     
