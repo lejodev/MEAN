@@ -1,4 +1,212 @@
-# AAAMB Advanced MEAN Stack Technical Test
+## Live project
+https://mean-4443lc9zb-lejodevs-projects.vercel.app/dashboard
+
+# Running the Project Locally
+
+Follow these steps to set up and run the project on your local machine.
+
+## StepsSteps to run the project locally
+
+***Clone the repo:***
+
+   ```shell script
+git clone https://github.com/lejodev/MEAN.git
+```
+ ***Initialize git :***
+   ```shell script
+ git init
+```
+
+ ***go to backend:***
+   ```shell script
+ cd backend
+```
+ 
+ ***install dependencies:***
+   ```shell script 
+ npm run install
+```
+
+ ***Run the backend:***
+   ```shell script
+
+  npm run dev
+```
+
+ ***Go to frontend:***
+   ```shell script
+cd ../frontend
+```
+
+ ***install dependencies:***
+   ```shell script
+ npm run install
+```
+
+ ***run the frontend: ***
+   ```shell script
+npm run start
+```
+
+
+# Task Management Application Features Overview
+
+## Core Features
+
+- Create new tasks with title, description, and due date
+- Search tasks by its title
+- Update existing tasks
+- Confirmation dialog when deleteing a task
+- Delete tasks
+- Task history tracking
+
+## Technical Features
+- Backend (Node.js/Express)
+- Frontend (Angular)
+- Architecture: MVC pattern
+- Database: MongoDB with Mongoose
+
+## Middleware Stack:
+- Request logging
+- Error handling
+
+## History tracking
+- Due date validation
+
+# Task Management API Documentation
+
+## Base URL
+```
+https://mean-pof3.onrender.com/api/tasks
+```
+
+## Endpoints
+
+### Get All Tasks
+Retrieves all tasks sorted by due date.
+
+- **URL:** `/all`
+- **Method:** `GET`
+- **Auth required:** No
+- **Response Format:** JSON
+
+**Success Response:**
+```json
+[
+  {
+    "_id": "string",
+    "title": "string",
+    "description": "string",
+    "dueDate": "YYYY-MM-DD",
+    "status": "string",
+    "history": [
+      {
+        "field": "string",
+        "oldValue": "any",
+        "newValue": "any",
+        "changedAt": "datetime"
+      }
+    ]
+  }
+]
+```
+
+### Get Task by ID
+Retrieves a specific task by its ID.
+
+- **URL:** `/:id`
+- **Method:** `GET`
+- **URL Params:** 
+  - Required: `id=[string]`
+- **Response Format:** JSON
+
+**Success Response:**
+```json
+{
+  "_id": "string",
+  "title": "string",
+  "description": "string",
+  "dueDate": "YYYY-MM-DD",
+  "status": "string",
+  "history": []
+}
+```
+
+### Create Task
+Creates a new task.
+
+- **URL:** `/`
+- **Method:** `POST`
+- **Data Params:**
+```json
+{
+  "title": "string",
+  "description": "string",
+  "dueDate": "YYYY-MM-DD",
+  "status": "string"
+}
+```
+- **Response Format:** JSON
+
+### Update Task
+Updates an existing task.
+
+- **URL:** `/:id`
+- **Method:** `PUT`
+- **URL Params:**
+  - Required: `id=[string]`
+- **Data Params:**
+```json
+{
+  "title": "string",
+  "description": "string",
+  "dueDate": "YYYY-MM-DD",
+  "status": "string"
+}
+```
+- **Middleware:** Validates due date format
+- **Response Format:** JSON
+
+### Delete Task
+Deletes a specific task.
+
+- **URL:** `/:taskId`
+- **Method:** `DELETE`
+- **URL Params:**
+  - Required: `taskId=[string]`
+- **Response Format:** JSON
+
+## Error Responses
+
+**404 Not Found:**
+```json
+{
+  "error": "Task not found"
+}
+```
+
+**400 Bad Request:**
+```json
+{
+  "error": "Invalid due date format"
+}
+```
+
+**500 Server Error:**
+```json
+{
+  "error": "Internal server error"
+}
+```
+
+## Notes
+- All dates should be in `YYYY-MM-DD` format
+- The history array tracks all changes made to the task
+- Task status can be: "pending", "in-progress", "completed" 
+
+* the project willl be served on the following link: http://localhost:4200/dashboard*
+
+Convert this text into a .md format
 
 ## Overview
   
